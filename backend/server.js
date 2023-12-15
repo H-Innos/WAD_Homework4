@@ -9,6 +9,7 @@ app.use(cors());
 
 app.use(express.json());
 
+// Get the posts in the database 
 app.get('/api/posts', async (req, res) => {
     try {
         console.log("get posts request received");
@@ -21,6 +22,7 @@ app.get('/api/posts', async (req, res) => {
     }
 })
 
+// Incrementing the number of likes of a post
 app.put('/api/posts/increment-likes/:id', async (req, res) => {
     try {
       const { id } = req.params; 
@@ -41,6 +43,7 @@ app.put('/api/posts/increment-likes/:id', async (req, res) => {
     }
 });
 
+// Adding a post to the database
 app.post('/api/posts', async (req, res) => {
     try {
         console.log("a post request has arrived");
@@ -54,6 +57,7 @@ app.post('/api/posts', async (req, res) => {
     }
 })
 
+// Deleting all posts from the database 
 app.delete('/api/posts', async (req, res) => {
     try {
         console.log("a delete request has arrived");

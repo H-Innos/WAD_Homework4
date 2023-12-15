@@ -3,8 +3,8 @@ const Pool = require('pg').Pool;
 
 const pool = new Pool({
     user: "postgres",
-    password: "postgres",   // insert your password
-    database: "WebApp",     // insert your database name 
+    password: "",   // insert your password
+    database: "",     // insert your database name 
     host: "localhost",
     port: "5432"
 });
@@ -20,6 +20,7 @@ const execute = async(query) => {
     }
 };
 
+// Query for creating the post table 
 const createPostTableQuery = `
     CREATE TABLE IF NOT EXISTS "posttable" (
         "id" SERIAL PRIMARY KEY,
@@ -32,6 +33,7 @@ const createPostTableQuery = `
         "likes" INTEGER NOT NULL
     )`;
 
+// Query for creating initial posts
 const intializePostTableQuery = `
     INSERT INTO "posttable" (
         "author_name",
@@ -49,6 +51,7 @@ const intializePostTableQuery = `
     ('Alice Brown', NULL, '2023-01-05', 'text', 'one last post', NULL, 0);
 `;
 
+// Checks whether the table is empty
 const checkTableData = async (tableName) => {
     try {
         const query = `SELECT COUNT(*) AS row_count FROM ${tableName}`;
@@ -65,26 +68,28 @@ const checkTableData = async (tableName) => {
         return false;
     }
 };
+
+// Initialize the database with initial data
 const initializeDatabase = async () => {
     try {
         await pool.connect();
-        const createResult = await execute(createPostTableQuery);
+        const createResult = await execute(createPostTableQuery); // create the posts table if it doesn't exist
         
         const tableName = "posttable";
-        const hasData = await checkTableData(tableName);
+        const hasData = await checkTableData(tableName); // check if the table is empty
     
         if (hasData) {
             console.log(`The table ${tableName} contains data.`);
         } else {
             console.log(`The table ${tableName} is empty, adding intial data.`);
-            await execute(intializePostTableQuery);
+            await execute(intializePostTableQuery); // if the table is empty, fill it with initial data
         }
     } finally { 
 
     }
 };
     
-    
+// Initialize database     
 initializeDatabase().then(() => {
     console.log('Database initialization completed.');
 });
