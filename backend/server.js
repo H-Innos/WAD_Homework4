@@ -54,6 +54,18 @@ app.post('/api/posts', async (req, res) => {
     }
 })
 
+app.delete('/api/posts', async (req, res) => {
+    try {
+        console.log("a delete request has arrived");
+        const deleteAll = await pool.query(
+            "DELETE FROM posttable RETURNING*"
+        );
+        res.json(deleteAll);
+    } catch (err) {
+        console.error(err.message);
+    }
+})
+
 app.listen(port, () => {
     console.log('listening on port ' + port);
 });
