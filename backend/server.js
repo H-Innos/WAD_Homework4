@@ -41,18 +41,18 @@ app.put('/api/posts/increment-likes/:id', async (req, res) => {
     }
 });
 
-app.put('/api/posts/reset-likes', async (req, res) => {
+app.post('/api/posts', async (req, res) => {
     try {
-        const resetLikesQuery = `
-        UPDATE posttable
-        SET likes = 0
-        RETURNING *`;
-    
-        const updated = await pool.query(resetLikesQuery);
-        res.send(updated);
-    } catch (err) { console.error(err.message);}
-    
-});
+        console.log("a post request has arrived");
+        const post = req.body;
+        const newpost = await pool.query(
+            "INSERT INTO posttable(date, content_type, text_content, likes) values ($1, $2, $3, $4)    RETURNING*", [post.date, "text", post.body, 0]
+        );
+        res.json(newpost);
+    } catch (err) {
+        console.error(err.message);
+    }
+})
 
 app.listen(port, () => {
     console.log('listening on port ' + port);
