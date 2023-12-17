@@ -1,10 +1,9 @@
 <template>
   <div class="home">
-    <div class="container">
+    <div v-if="loggedin()" class="container">
       <aside id="left-bar"></aside>
       <div class="content-and-buttons">
         <button id="logout" @click="logout"> Logout </button>
-        <p v-if="!loggedin()">Log in to see posts</p>
         <div class="content">
           <div v-for="post in posts" :key="post.id">
           <Post :post="post" @incrementLikes="incrementLikes" @editPost="editPost"></Post>
@@ -18,6 +17,7 @@
       </div>
       <aside id="right-bar"></aside>
     </div>
+    <p v-else>Log in to see this page</p>
   </div>
 </template>
 
