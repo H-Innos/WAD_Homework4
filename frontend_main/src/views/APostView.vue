@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loggedin()" class="a-post">
+  <div class="a-post">
     <div class="a-post-box">
       <h1>A Post</h1>
       <div class="a-post-container">
@@ -10,7 +10,6 @@
       <button @click="deletePost" class="deletePost">Delete Post</button>
     </div>
   </div>
-  <p v-else>Log in to see this page</p>
 </template>
 
 
@@ -28,9 +27,6 @@ export default {
     };
   },
   methods: {
-    loggedin() {
-      return localStorage.getItem("user") != null;
-    },
     fetchAPost(id) {
       // fetch one post with the specied id (id)
       fetch(`http://localhost:3000/api/posts/${id}`, {

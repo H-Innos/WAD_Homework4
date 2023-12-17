@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div v-if="loggedin()" class="container">
+    <div class="container">
       <aside id="left-bar"></aside>
       <div class="content-and-buttons">
         <button id="logout" @click="logout"> Logout </button>
@@ -17,7 +17,6 @@
       </div>
       <aside id="right-bar"></aside>
     </div>
-    <p v-else>Log in to see this page</p>
   </div>
 </template>
 
@@ -37,25 +36,22 @@ export default {
   computed: {
   },
   methods: {
-    loggedin() {
-      return localStorage.getItem("user") != null;
-    },
-    async incrementLikes(postId) {
-      try {
-        const response = await fetch(`http://localhost:3000/api/posts/increment-likes/${postId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': localStorage.getItem("user")
-          },
-        });
-
-        const updatedPost = await response.json();
-
-        this.posts = this.posts.map((post) => (post.id === updatedPost.id ? updatedPost : post));
-      } catch (err) {
-        console.log(err.message);
-      }
+    logout() {
+      fetch("http://localhost:3000/auth/logout", {
+          credentials: 'include', //  Don't forget to specify this if you need cookies
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        console.log('jwt removed');
+        //console.log('jwt removed:' + auth.authenticated());
+        this.$router.push("/api/login");
+        //location.assign("/");
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log("error logout");
+      });
     },
     addPost() {
       this.$router.push('/api/addPost');
@@ -101,10 +97,6 @@ export default {
         console.log(err.message);
       }
     },
-    logout() {
-      localStorage.removeItem("user");
-      this.$router.push("/api/login");
-    }
   },
   mounted() {
     this.fetchPosts();

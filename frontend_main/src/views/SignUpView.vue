@@ -55,29 +55,29 @@ export default {
       if(this.validatePassword)
         return;
 
-      this.error = '';
-      var data = {
-          email: this.email,
-          password: this.password
+        var data = {
+        email: this.email,
+        password: this.password
       };
-      fetch(`http://localhost:3000/api/signup`, {
-          method: 'POST',
-          headers: { 
-              'Content-Type': 'application/json' 
-          },
+      // using Fetch - post method - send an HTTP post request to the specified URI with the defined body
+      fetch("http://localhost:3000/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+          credentials: 'include',
           body: JSON.stringify(data),
       })
-      .then(response => response.json())
-      .then((response) => {
-          if(response.error) {
-            this.error = response.error;
-          }
-          else {
-              console.log('Signing up user: ', this.email, this.password);
-              this.$router.push("/");
-          }
+      .then((response) => response.json())
+      .then((data) => {
+      console.log(data);
+      this.$router.push("/");
+      //location.assign("/");
       })
-      .catch((err) => console.log(err.message));
+      .catch((e) => {
+        console.log(e);
+        console.log("error");
+      });
     }
   }
 }

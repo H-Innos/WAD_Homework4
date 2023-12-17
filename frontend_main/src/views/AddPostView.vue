@@ -1,5 +1,5 @@
 <template>
-    <div v-if="loggedin()" class="add-post">
+    <div class="add-post">
       <div class="add-post-box">
         <h1>Add Post</h1>
         <div class="container">
@@ -9,7 +9,6 @@
         <button @click="addPost">Add</button>
       </div>
     </div>
-    <p v-else>Log in to see this page</p>
   </template>
   
 <script>
@@ -22,9 +21,6 @@
       };
     },
     methods: {
-        loggedin() {
-          return localStorage.getItem("user") != null;
-        },
         todayFormatted() {
             const today = new Date();
 

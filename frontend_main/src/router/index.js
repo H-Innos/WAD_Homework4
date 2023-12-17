@@ -4,13 +4,22 @@ import ContactUsView from '../views/ContactUsView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import LoginView from '../views/LoginView.vue'
 import AddPostView from '../views/AddPostView.vue'
-import APostView from '../views/APostView.vue';
+import APostView from '../views/APostView.vue'
+import auth from "../auth";
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: async(to, from, next) => {
+        let authResult = await auth.authenticated();
+        if (!authResult) {
+            next('/api/login')
+        } else {
+            next();
+        }
+    }
   },
   {
     path: '/api/signup',
@@ -25,17 +34,46 @@ const routes = [
   {
     path: '/api/addPost',
     name: 'addPost',
-    component : AddPostView
+    component : AddPostView,
+    beforeEnter: async(to, from, next) => {
+        let authResult = await auth.authenticated();
+        if (!authResult) {
+            next('/api/login')
+        } else {
+            next();
+        }
+    }
   },
   {
     path: "/api/apost/:id",
     name: "apost",
     component: APostView,
+    beforeEnter: async(to, from, next) => {
+        let authResult = await auth.authenticated();
+        if (!authResult) {
+            next('/api/login')
+        } else {
+            next();
+        }
+    }
   },
   {
     path: "/api/login",
     name: "login",
     component: LoginView,
+  },
+  { //will route to AllPosts view if none of the previous routes apply
+    path: "/:catchAll(.*)",
+    name: 'home',
+    component: HomeView,
+    beforeEnter: async(to, from, next) => {
+        let authResult = await auth.authenticated();
+        if (!authResult) {
+            next('/api/login')
+        } else {
+            next();
+        }
+    }
   }
 ]
 
