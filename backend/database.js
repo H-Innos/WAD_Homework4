@@ -3,10 +3,10 @@ const Pool = require('pg').Pool;
 
 const pool = new Pool({
     user: "postgres",
-    password: "",   // insert your password
-    database: "",     // insert your database name 
+    password: "Terra123",   // insert your password
+    database: "testWad",     // insert your database name 
     host: "localhost",
-    port: "5432"
+    port: "5433"
 });
 
 const execute = async(query) => {
@@ -33,6 +33,14 @@ const createPostTableQuery = `
         "likes" INTEGER NOT NULL
     )`;
 
+// Query for creating the user table 
+const createUserTableQuery = `
+    CREATE TABLE IF NOT EXISTS "usertable" (
+        "id" SERIAL PRIMARY KEY,
+        "email" VARCHAR(255) NOT NULL,
+        "hash" VARCHAR(255) NOT NULL
+    )`;
+
 // Query for creating initial posts
 const intializePostTableQuery = `
     INSERT INTO "posttable" (
@@ -44,12 +52,12 @@ const intializePostTableQuery = `
         "image_content",
         "likes"
     ) VALUES
-    ('Mari Maasikas', NULL, '2023-01-01', 'text', 'first post ', NULL, 0),
-    ('John Doe', NULL, '2023-01-02', 'image', NULL, '/img/testpilt1.png', 0),
-    ('Jane Smith', NULL, '2023-01-03', 'text', 'another post', NULL, 0),
-    ('Bob Johnson', NULL, '2023-01-04', 'mixed', 'text under picture', '/img/testpilt2.jpg', 0),
-    ('Alice Brown', NULL, '2023-01-05', 'text', 'one last post', NULL, 0);
+    (NULL, NULL, '2023-01-01', 'text', 'first post ', NULL, 0),
+    (NULL, NULL, '2023-01-02', 'text', 'another post', NULL, 0),
+    (NULL, NULL, '2023-01-04', 'text', 'one last post', NULL, 0),
+    (NULL, NULL, '2023-01-03', 'mixed', 'text under picture', '/img/testpilt2.jpg', 0);
 `;
+//I
 
 // Checks whether the table is empty
 const checkTableData = async (tableName) => {
@@ -73,7 +81,8 @@ const checkTableData = async (tableName) => {
 const initializeDatabase = async () => {
     try {
         await pool.connect();
-        const createResult = await execute(createPostTableQuery); // create the posts table if it doesn't exist
+        await execute(createPostTableQuery); // create the posts table if it doesn't exist
+        await execute(createUserTableQuery); // create the users table if it doesn't exist
         
         const tableName = "posttable";
         const hasData = await checkTableData(tableName); // check if the table is empty
